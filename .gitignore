@@ -1,0 +1,10 @@
+*__pycache__/
+
+*.db
+
+*.txt
+
+*.sql
+
+*.json
+*.jsonl
