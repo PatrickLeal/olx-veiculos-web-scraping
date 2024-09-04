@@ -4,6 +4,9 @@ from time import sleep
 
 from drivers.file_manager import FileManager
 from drivers.requests.driver_requests import Requests
+from logs.logger import get_logger
+
+logger = get_logger(__name__)
 
 class VeiculosLinksParser:
     
@@ -20,18 +23,20 @@ class VeiculosLinksParser:
         self.file_manager.save_links_jsonl(lista_anuncios,
                                            path_links,
                                            file_name)
+        logger.info("Links salvos no arquivo .jsonl com sucesso")
 
     def __download_links_anuncios(self) -> List[str]:
         MAX_PAGES = 100
         
+        lista_anuncios = []
         for i in range(1, MAX_PAGES+1):
             url = f'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios?o={i}'
             response = self.request.get(url)
-            sleep(1)
+            sleep(1.5)
 
-            lista_anuncios = []
             if response.status_code == 200:
-                print(f"Raspando pag {i} de {MAX_PAGES}...")
+                logger.info(f"Raspando pagina {i} de {MAX_PAGES}...")
+
                 soup = BeautifulSoup(response.text, 'html.parser')
 
                 ads = soup.find_all('section', {'data-ds-component': 'DS-AdCard'})
@@ -48,6 +53,8 @@ class VeiculosLinksParser:
                 msg = f"""
                 Erro ao raspar a url: {url}
                 Resposta recebida: <{response.status_code}>"""
+                logger.error(msg)
                 raise(msg)
-            
-            return lista_anuncios
+
+        logger.info("Links raspados") 
+        return lista_anuncios

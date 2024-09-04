@@ -1,6 +1,7 @@
+import datetime
 import os
 import json
-from typing import Any,Dict,List
+from typing import List
 
 class FileManager:
 
@@ -17,7 +18,8 @@ class FileManager:
         """Salva a lista com os links dos anuncios em um arquivo 'jsonl'."""
         
         anuncios = data
-        file_path = rf'{path}/{file_name}.jsonl'
+        now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_path = rf'{path}/{now}_{file_name}.jsonl'
 
         with open(file_path, 'w', encoding='utf-8') as file:
             for anuncio in anuncios:
