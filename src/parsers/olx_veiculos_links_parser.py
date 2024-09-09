@@ -2,9 +2,9 @@ from bs4 import BeautifulSoup
 from typing import Union, List
 from time import sleep
 
-from drivers.file_manager import FileManager
-from drivers.requests.driver_requests import Requests
-from logs.logger import get_logger
+from src.drivers.file_manager import FileManager
+from src.drivers.requests.driver_requests import Requests
+from src.logs.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -30,12 +30,14 @@ class VeiculosLinksParser:
         
         lista_anuncios = []
         for i in range(1, MAX_PAGES+1):
+    
             url = f'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios?o={i}'
             response = self.request.get(url)
             sleep(1.5)
 
             if response.status_code == 200:
-                logger.info(f"Raspando pagina {i} de {MAX_PAGES}...")
+                if (i+1) % 10 == 0:
+                    logger.info(f"Raspando pagina {i+1} de {MAX_PAGES}...")
 
                 soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -54,7 +56,7 @@ class VeiculosLinksParser:
                 Erro ao raspar a url: {url}
                 Resposta recebida: <{response.status_code}>"""
                 logger.error(msg)
-                raise(msg)
+                continue
 
         logger.info("Links raspados") 
         return lista_anuncios
