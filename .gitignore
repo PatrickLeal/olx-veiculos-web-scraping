@@ -8,8 +8,6 @@ scraper.log
 
 *.db
 
-*.txt
-
 *.sql
 
 *.json
