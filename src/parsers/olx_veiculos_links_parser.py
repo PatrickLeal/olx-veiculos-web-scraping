@@ -36,6 +36,9 @@ class VeiculosLinksParser:
             sleep(1.5)
 
             if response.status_code == 200:
+                if i == 0:
+                    logger.info(f"Raspando pagina {i+1} de {MAX_PAGES}...")
+
                 if (i+1) % 10 == 0:
                     logger.info(f"Raspando pagina {i+1} de {MAX_PAGES}...")
 

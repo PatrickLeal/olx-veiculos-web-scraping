@@ -76,7 +76,8 @@ class VeiculosDadosParser:
             else: 
                 msg = f"""
                 Erro ao raspar a url: {url}
-                Resposta recebida: <{response.status_code}>"""
+                Resposta recebida: <{response.status_code}>
+                **CONTINUANDO...**"""
                 logger.error(msg)
                 continue
         

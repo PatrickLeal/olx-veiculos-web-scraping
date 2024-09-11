@@ -10,7 +10,13 @@ class FileManager:
 
     def check_path(self, file_path: str)-> None:
         """Verifica se o caminho existe, caso não exista cria 
-        o caminho que foi passado."""
+        o caminho que foi passado.
+        
+        :param path: Caminho onde os dados serao salvos.
+        :type path: os.path | str(`caminho/caminho`)
+        :return: None
+        """
+
         if not os.path.exists(file_path):
             os.mkdir(file_path)
 
@@ -27,7 +33,18 @@ class FileManager:
                 file.write(json_line + '\n')
     
     def save_dados_veiculos_jsonl(self, data:List, path:str, file_name:str) -> None:
-        """Salva a lista com os dados dos veiculos em um arquivo 'jsonl'."""
+        """
+        Salva a lista com os dados dos veiculos em um arquivo 'jsonl'.
+
+        :param data: Lista de dicionarios contendo os dados raspados.
+        :type data: List
+        :param path: Caminho onde os dados serao salvos.
+        :type path: os.path | str(`caminho/caminho`)
+        :param file_name: Nome do arquivo.
+        :type file_name: str
+
+        :return: None
+        """
         
         veiculos = data
         now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -39,9 +56,17 @@ class FileManager:
                 file.write(json_line + '\n')
 
     @staticmethod
+    def create_and_save_csv() -> None:
+        ...
+
+    @staticmethod
     def get_links_file_path() -> List[str]:
-        """Função que retorna uma lista com o caminho dos .jsonl contendo
-        os links dos anuncios"""
+        """
+        Função que retorna uma lista com o caminho dos .jsonl contendo
+        os links dos anuncios
+
+        :return: Lista de 'path' com os nomes dos arquivos em `ordem crescente`.
+        """
 
         links_path = "src/data/raw/links_anuncios_raw"
         conteudo = os.listdir(links_path)
@@ -49,17 +74,30 @@ class FileManager:
         files = [f for f in conteudo if os.path.isfile(os.path.join(links_path, f))]
         files_path = [os.path.join(links_path, f) for f in files]
 
-        return files_path
-        
+        return sorted(files_path)
+
+    @staticmethod
+    def get_dados_veiculos_path() -> List[str]:
+        """
+        Função que retorna uma lista com o caminho dos .jsonl contendo
+        os links dados dos veiculos.
+
+        :return: Lista de 'path' com os nomes dos arquivos em `ordem crescente`.
+        """
+        links_path = "src/data/raw/dados_veiculos_raw"
+        conteudo = os.listdir(links_path)
+
+        files = [f for f in conteudo if os.path.isfile(os.path.join(links_path, f))]
+        files_path = [os.path.join(links_path, f) for f in files]
+
+        return sorted(files_path)
+
 def main():
     file_manager = FileManager()
-    conteudo = file_manager.get_links_file_path()
+    conteudo = file_manager.get_dados_veiculos_path()
 
-    with open(conteudo[0], 'r', encoding='utf-8') as file:
-        anuncios = [json.loads(line) for line in file] 
+    for c in conteudo:
+        print(c)
 
-    for ad in anuncios[:5]:
-        print(f"link: {ad['link_anuncio']}\n")
-
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
