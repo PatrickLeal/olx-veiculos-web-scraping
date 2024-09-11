@@ -4,6 +4,8 @@ teste.py
 
 scraper.log
 
+*.csv
+
 *.db
 
 *.txt
