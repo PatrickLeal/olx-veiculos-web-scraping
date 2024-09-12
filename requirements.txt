@@ -1,3 +1,5 @@
 beautifulsoup4==4.12.3
 cloudscraper==1.2.71
+pandas==2.1.4
+pip==23.3.2
 requests==2.31.0
