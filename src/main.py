@@ -1,6 +1,7 @@
 from src.parsers.olx_veiculos_links_parser import VeiculosLinksParser
 from src.parsers.olx_veiculos_dados_parser import VeiculosDadosParser
 from src.pipeline.bronze_pipeline import PipelineBronze
+from src.pipeline.silver_pipeline import PipelineSilver
 from src.logs.logger import get_logger
 
 logger = get_logger(__name__)
@@ -25,6 +26,10 @@ class PipelineManager:
         bronze_pipeline = PipelineBronze()
         bronze_pipeline.run()
 
+    def executar_pipeline_silver(self) -> None:
+        print("Iniciando pipeline silver...")
+        silver_pipeline = PipelineSilver()
+        silver_pipeline.run()
 
 def main() -> None:
     pipeline_manager = PipelineManager()
@@ -34,7 +39,9 @@ def main() -> None:
     # RASPANDO DADOS DOS CARROS
     # pipeline_manager.raspar_dados_veiculos()
 
-    pipeline_manager.executar_pipeline_bronze()
+    # pipeline_manager.executar_pipeline_bronze()
+
+    pipeline_manager.executar_pipeline_silver()
 
 if __name__ == "__main__":
     main()
