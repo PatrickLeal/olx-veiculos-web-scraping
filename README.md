@@ -91,8 +91,7 @@ df  = pd.read_csv(bronze_files_path[1])
 ├─ requirements.txt
 └─ start.py
 ```
-
-![fluxo](imagem aqui)
+<img src="https://github.com/PatrickLeal/olx-veiculos-web-scraping/blob/main/assets/fluxo%20projeto.png" alt="drawing" width="600"/>
 
 ## Melhorias possíveis
 
