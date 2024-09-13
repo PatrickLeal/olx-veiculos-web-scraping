@@ -13,11 +13,14 @@ class Requests:
     def __init__(self) -> None:
         pass
 
-    def get(self, url: str) -> Response:
+    def get(self, url: str) -> Response | Exception:
         """Retorna a resposta da requisição."""
-        response = scraper.get(url)
+        try:
+            response = scraper.get(url)
 
-        return response
+            return response
+        except cloudscraper.exceptions as e:
+            return e
 
 def main():
     req = Requests()

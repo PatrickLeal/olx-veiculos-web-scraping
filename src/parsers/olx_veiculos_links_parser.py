@@ -32,34 +32,37 @@ class VeiculosLinksParser:
         for i in range(1, MAX_PAGES+1):
     
             url = f'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios?o={i}'
-            response = self.request.get(url)
-            sleep(1.5)
+            try:
+                response = self.request.get(url)
+                sleep(1.5)
 
-            if response.status_code == 200:
-                if i == 0:
-                    logger.info(f"Raspando pagina {i+1} de {MAX_PAGES}...")
+                if response.status_code == 200:
+                    if i == 0:
+                        logger.info(f"Raspando pagina {i+1} de {MAX_PAGES}...")
 
-                if (i+1) % 10 == 0:
-                    logger.info(f"Raspando pagina {i+1} de {MAX_PAGES}...")
+                    if (i+1) % 10 == 0:
+                        logger.info(f"Raspando pagina {i+1} de {MAX_PAGES}...")
 
-                soup = BeautifulSoup(response.text, 'html.parser')
+                    soup = BeautifulSoup(response.text, 'html.parser')
 
-                ads = soup.find_all('section', {'data-ds-component': 'DS-AdCard'})
+                    ads = soup.find_all('section', {'data-ds-component': 'DS-AdCard'})
 
-                for ad in ads:      
-                    anuncio = ad
-                    nome_anuncio = anuncio.find('a', {'class': 'olx-ad-card__title-link'}).text
-                    link_anuncio = anuncio.find('a')['href']
+                    for ad in ads:      
+                        anuncio = ad
+                        nome_anuncio = anuncio.find('a', {'class': 'olx-ad-card__title-link'}).text
+                        link_anuncio = anuncio.find('a')['href']
 
-                    lista_anuncios.append({'nome_anuncio': nome_anuncio,
-                                            'link_anuncio': link_anuncio})
-                    
-            else: 
-                msg = f"""
-                Erro ao raspar a url: {url}
-                Resposta recebida: <{response.status_code}>"""
-                logger.error(msg)
-                continue
-
+                        lista_anuncios.append({'nome_anuncio': nome_anuncio,
+                                                'link_anuncio': link_anuncio})
+                        
+                else: 
+                    msg = f"""
+                    Erro ao raspar a url: {url}
+                    Resposta recebida: <{response.status_code}>"""
+                    logger.error(msg)
+                    continue
+            except:
+                logger.error(response)
+                
         logger.info("Links raspados") 
         return lista_anuncios

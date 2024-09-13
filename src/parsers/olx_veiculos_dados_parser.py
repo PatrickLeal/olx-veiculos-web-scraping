@@ -34,53 +34,56 @@ class VeiculosDadosParser:
         qtd_links = len(urls)
         
         for i, url in enumerate(urls):
-            response = self.request.get(url)
+            try:
+                response = self.request.get(url)
 
-            if response.status_code == 200:
-                if i == 0:
-                    logger.info(f"Raspando anuncio {i+1} de {qtd_links}...")
+                if response.status_code == 200:
+                    if i == 0:
+                        logger.info(f"Raspando anuncio {i+1} de {qtd_links}...")
 
-                if (i+1) % 100 == 0:
-                    logger.info(f"Raspando anuncio {i+1} de {qtd_links}...")
+                    if (i+1) % 100 == 0:
+                        logger.info(f"Raspando anuncio {i+1} de {qtd_links}...")
 
-                soup = BeautifulSoup(response.text, 'html.parser')
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    
+                    # INFO DA PUBLICACAO
+                    divs = soup.find_all('div', {'data-ds-component': 'DS-Flex'})
+                    div_desejada = 'publicado em'
+                    publicacao_info = [p.text for p in divs if div_desejada in p.text.lower()]
+
+                    # CARATCTERISCAS:
+                    divs_caracts = soup.find_all('div', {'class' : 'olx-d-flex olx-ml-2 olx-ai-baseline olx-fd-column'})
+                    caracteristicas = {}
+                    for caracteristica in divs_caracts:
+                        elementos = caracteristica.findChildren()
+                        caracteristicas[elementos[0].text] = elementos[1].text
+
+                    # OPCIONAIS:
+                    spans_opcionais = soup.find_all('span', {'class' : "olx-text olx-text--body-medium olx-text--block olx-text--regular ad__sc-1g2w54p-0 cutgWh olx-color-neutral-130"})
+                    opcionais = [op.text for op in spans_opcionais]
+                    
+                    yield {
+                        'titulo': soup.find('h1').text,
+                        'publicacao_info':publicacao_info,
+                        'preco': soup.find_all('h2', {'class': 'olx-text olx-text--title-large olx-text--block ad__sc-1leoitd-0 bpLbCi'})[0].text,
+                        'descricao': soup.find('span', {'class' : 'olx-text olx-text--body-medium olx-text--block olx-text--regular ad__sc-1sj3nln-1 fMgwdS'}).text,
+                        'caracteristicas':caracteristicas,
+                        'opcionais': opcionais,
+                        'cep': soup.find('div', {'class' : 'ad__sc-1f2ug0x-3 efnZpq olx-d-flex olx-mt-2'}).findChildren()[1].text,
+                        'imagem':soup.find_all('img')[0]['src'],
+                        'perfil_carro':url
+                    }
+
+                else: 
+                    msg = f"""
+                    Erro ao raspar a url: {url}
+                    Resposta recebida: <{response.status_code}>
+                    **CONTINUANDO...**"""
+                    logger.error(msg)
+                    continue
+            except:
+                logger.error(response)  
                 
-                # INFO DA PUBLICACAO
-                divs = soup.find_all('div', {'data-ds-component': 'DS-Flex'})
-                div_desejada = 'publicado em'
-                publicacao_info = [p.text for p in divs if div_desejada in p.text.lower()]
-
-                # CARATCTERISCAS:
-                divs_caracts = soup.find_all('div', {'class' : 'olx-d-flex olx-ml-2 olx-ai-baseline olx-fd-column'})
-                caracteristicas = {}
-                for caracteristica in divs_caracts:
-                    elementos = caracteristica.findChildren()
-                    caracteristicas[elementos[0].text] = elementos[1].text
-
-                # OPCIONAIS:
-                spans_opcionais = soup.find_all('span', {'class' : "olx-text olx-text--body-medium olx-text--block olx-text--regular ad__sc-1g2w54p-0 cutgWh olx-color-neutral-130"})
-                opcionais = [op.text for op in spans_opcionais]
-                
-                yield {
-                    'titulo': soup.find('h1').text,
-                    'publicacao_info':publicacao_info,
-                    'preco': soup.find_all('h2', {'class': 'olx-text olx-text--title-large olx-text--block ad__sc-1leoitd-0 bpLbCi'})[0].text,
-                    'descricao': soup.find('span', {'class' : 'olx-text olx-text--body-medium olx-text--block olx-text--regular ad__sc-1sj3nln-1 fMgwdS'}).text,
-                    'caracteristicas':caracteristicas,
-                    'opcionais': opcionais,
-                    'cep': soup.find('div', {'class' : 'ad__sc-1f2ug0x-3 efnZpq olx-d-flex olx-mt-2'}).findChildren()[1].text,
-                    'imagem':soup.find_all('img')[0]['src'],
-                    'perfil_carro':url
-                }
-
-            else: 
-                msg = f"""
-                Erro ao raspar a url: {url}
-                Resposta recebida: <{response.status_code}>
-                **CONTINUANDO...**"""
-                logger.error(msg)
-                continue
-        
         logger.info("Dados raspados.")
 
     def __get_urls(self) -> List[str]:
@@ -88,7 +91,7 @@ class VeiculosDadosParser:
 
         # como isso não vai ser um processo que vai se repetir várias vezes
         # vou manter a leitura apenas de um arquivo dentro do diretorio
-        path_links = files_path[0] # pode passar o caminho do arquivo tbm
+        path_links = files_path[2] # pode passar o caminho do arquivo tbm
         with open(path_links, 'r', encoding='utf-8') as file:
             ads = [json.loads(line) for line in file] 
         
