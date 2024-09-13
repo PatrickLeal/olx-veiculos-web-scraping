@@ -39,8 +39,10 @@ def main() -> None:
     # RASPANDO DADOS DOS CARROS
     # pipeline_manager.raspar_dados_veiculos()
 
+    # PASSANDO DE OS DADOS PARA .CSV  
     # pipeline_manager.executar_pipeline_bronze()
 
+    # PASSANDO DE OS DADOS PARA .CSV DA CAMADA SILVER 
     pipeline_manager.executar_pipeline_silver()
 
 if __name__ == "__main__":
