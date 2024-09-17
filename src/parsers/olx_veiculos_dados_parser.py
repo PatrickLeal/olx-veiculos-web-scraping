@@ -91,7 +91,7 @@ class VeiculosDadosParser:
 
         # como isso não vai ser um processo que vai se repetir várias vezes
         # vou manter a leitura apenas de um arquivo dentro do diretorio
-        path_links = files_path[2] # pode passar o caminho do arquivo tbm
+        path_links = files_path[3] # pode passar o caminho do arquivo tbm
         with open(path_links, 'r', encoding='utf-8') as file:
             ads = [json.loads(line) for line in file] 
         

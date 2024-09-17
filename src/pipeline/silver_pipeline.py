@@ -7,13 +7,16 @@ import ast
 from src.drivers.file_manager import FileManager
 
 class PipelineSilver:
-
+    """
+    Classe responsável por limpar e tranformar os dados da camada bronze e salvar
+    na camada silver.
+    """
     def __init__(self) -> None:
         self.filemanager = FileManager()
 
     def run(self) -> None:
         bronze_files_path = self.filemanager.get_dados_bronze_path()
-        df = pd.read_csv(bronze_files_path[1])
+        df = pd.read_csv(bronze_files_path[2])
         
         print("Fazendo a transformação dos dados.")
         df_publi_cleaned = self.__clean_publicacao_info_column(df)

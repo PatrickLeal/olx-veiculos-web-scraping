@@ -6,7 +6,8 @@ from src.drivers.file_manager import FileManager
 
 class PipelineBronze:
     """
-    Essa classe é responsável por pegar os dados dos arquivos .jsonl e salvar em um arquivo '.csv'.
+    Essa classe é responsável por pegar os dados dos arquivos .jsonl e salvar 
+    em um arquivo '.csv'.
     """
 
     def __init__(self) -> None:
