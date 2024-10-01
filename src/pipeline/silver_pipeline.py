@@ -16,7 +16,7 @@ class PipelineSilver:
 
     def run(self) -> None:
         bronze_files_path = self.filemanager.get_dados_bronze_path()
-        df = pd.read_csv(bronze_files_path[2])
+        df = pd.read_csv(bronze_files_path[-1])
         
         print("Fazendo a transformação dos dados.")
         df_publi_cleaned = self.__clean_publicacao_info_column(df)

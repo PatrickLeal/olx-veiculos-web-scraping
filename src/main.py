@@ -40,7 +40,7 @@ def main() -> None:
     # pipeline_manager.raspar_dados_veiculos()
 
     # PASSANDO DE OS DADOS PARA .CSV  
-    # pipeline_manager.executar_pipeline_bronze()
+    pipeline_manager.executar_pipeline_bronze()
 
     # PASSANDO DE OS DADOS PARA .CSV DA CAMADA SILVER 
     pipeline_manager.executar_pipeline_silver()
