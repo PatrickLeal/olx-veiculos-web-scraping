@@ -34,10 +34,10 @@ class PipelineManager:
 def main() -> None:
     pipeline_manager = PipelineManager()
     # RASPANDO LINKS
-    # pipeline_manager.raspar_links()
+    pipeline_manager.raspar_links()
 
     # RASPANDO DADOS DOS CARROS
-    # pipeline_manager.raspar_dados_veiculos()
+    pipeline_manager.raspar_dados_veiculos()
 
     # PASSANDO DE OS DADOS PARA .CSV  
     pipeline_manager.executar_pipeline_bronze()
